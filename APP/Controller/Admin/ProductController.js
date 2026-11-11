@@ -248,9 +248,11 @@ let ProductCreate = (req, res) => {
         ProductsInStock,
         ProductRating,
         ProductColor,
+        ProductImages2,
         IsFeatured,
         ProductWeight,
-        ProductShipCharges
+        ProductShipCharges,
+        
     } = req.body;
 
     // Check single image
@@ -282,12 +284,13 @@ let ProductCreate = (req, res) => {
             ProductRating,
             ProductColor,
             ProductImages1,
+            ProductImages2,
             ProductImages4,
             IsFeatured,
             ProductWeight,
             ProductShipCharges
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -302,10 +305,12 @@ let ProductCreate = (req, res) => {
         ProductRating,
         ProductColor,
         singleimage,
+        ProductImages2,
         JSON.stringify(images),
         IsFeatured,
         ProductWeight,
-        ProductShipCharges
+        ProductShipCharges,
+        
     ];
 
     connection.query(sql, values, (error, result) => {
