@@ -15,7 +15,8 @@ const { ProductList, ProductDelete, ProductByPrice, ProductCreate, ProductUpdate
     UpdateQty,
     UpdateQtyMinus,
     GetListById,
-    UpdateMainImage} = require('../../Controller/Admin/ProductController');
+    UpdateMainImage,
+    GetColor} = require('../../Controller/Admin/ProductController');
 const upload = require('../../multer');
 const { CheckDuplicateName } = require('../../MiddleWare/CheckProductName');
 const { CheckProductQty } = require('../../MiddleWare/CheckProductQty');
@@ -45,5 +46,6 @@ ProductRoutes.put('/product-updateqty/:qty/:id' ,CheckProductQty, UpdateQty);
 ProductRoutes.put('/product-updateqtyminus/:qty/:id', UpdateQtyMinus);
 ProductRoutes.get('/product-listbyid/:id' , GetListById);
 ProductRoutes.put('/product-singleimage/:id' , upload.single('image') , UpdateMainImage);
+ProductRoutes.get('/product-getcolorcat/:id' , GetColor);
 
 module.exports = ProductRoutes; 

@@ -474,8 +474,21 @@ if (error) return res.status(500).json({success: false , msg: "DB Error" , Error
   })
 }
 
+let GetColor = (req , res) => {
+
+  const sql = `SELECT id,ProductImages1 FROM products WHERE ProductCategory = ?`;
+  const id = req.params.id;
+
+  connection.query(sql , [id] , (error , result) => {
+
+    if (error) return res.status(500).json({success: false , msg: "DB Error" , Error: error});
+    if (result) return res.status(200).json({success: true , msg: 'Data Get OK' , Data: result})
+  })
+
+}
+
 module.exports = {ProductList , ProductDelete , ProductByPrice , ProductCreate , ProductUpdate ,
    ProductCreate2 , GetImages , UploadImage , ListColorFilter , ProductListByColor , ListBrandFilter , 
   ProductListByCategory , ProdcutListByColorandPrice , ProductListByBrand,ListSubCategoryFilter,
 ProdcutListBySubCategory , ProdcutListBySubCategoryandPrice, ListRatingFilter , ProductListByRating, UpdateQty ,
- UpdateQtyMinus, GetListById, UpdateMainImage}
+ UpdateQtyMinus, GetListById, UpdateMainImage , GetColor}
