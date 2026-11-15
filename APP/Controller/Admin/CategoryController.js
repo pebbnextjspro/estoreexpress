@@ -12,8 +12,8 @@ let CategoryList = (req , res) => {
     const sql = `SELECT ROW_NUMBER() OVER (order by id) AS SrNo,id,CategoryName,CategoryImgUrl,
     CategoryColor FROM categories order by CategoryName`;
     connection.query(sql , (error , result) => {
-        if (error) return res.json({msg: "There is a Server Error" , Error: error});
-        if (result) return res.json({msg: "Data Get Succesfuly" , Data: result});
+        if (error) return res.json({success: false, msg: "There is a Server Error" , Error: error});
+        if (result) return res.json({success: true ,  msg: "Data Get Succesfuly" , Data: result});
     })
 }
 

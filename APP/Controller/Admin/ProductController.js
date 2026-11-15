@@ -19,6 +19,16 @@ let ProductList = (req , res) => {
     })
 }
 
+let ProductListNextJs = (req , res) => {
+
+    const sql = `select * from products order by ProductName`;
+    connection.query(sql , (error , result) => {
+      console.log(error);
+        if(error) return res.status(500).json({success: false, msg: 'There is an error in DB' ,  Error: error});
+        if(result) return res.status(200).json({success: true, msg: "Data Get Succesfully" , Data: result});
+    })
+}
+
 let ProductListByBrand = (req , res) => {
 
     const sql = `${productlist} and 
@@ -137,9 +147,8 @@ let ProductDelete = (req , res) => {
 
 let ProductByPrice = (req , res) => {
 
-    const sql = `${productlist} AND pr.ProductOldPrice BETWEEN ? AND ? AND pr.ProductCategory = ?`
+    const sql = `${productlist} AND pr.ProductNewPrice BETWEEN 100 AND ? AND pr.ProductCategory = ?`
 
-const priceone = req.params.priceone;
 const pricetwo = req.params.pricetwo;
 const category = req.params.category;
 
@@ -496,4 +505,4 @@ module.exports = {ProductList , ProductDelete , ProductByPrice , ProductCreate ,
    ProductCreate2 , GetImages , UploadImage , ListColorFilter , ProductListByColor , ListBrandFilter , 
   ProductListByCategory , ProdcutListByColorandPrice , ProductListByBrand,ListSubCategoryFilter,
 ProdcutListBySubCategory , ProdcutListBySubCategoryandPrice, ListRatingFilter , ProductListByRating, UpdateQty ,
- UpdateQtyMinus, GetListById, UpdateMainImage , GetColor}
+ UpdateQtyMinus, GetListById, UpdateMainImage , GetColor, ProductListNextJs}
