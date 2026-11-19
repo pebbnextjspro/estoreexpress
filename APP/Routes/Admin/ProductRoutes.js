@@ -17,7 +17,8 @@ const { ProductList, ProductDelete, ProductByPrice, ProductCreate, ProductUpdate
     GetListById,
     UpdateMainImage,
     GetColor,
-    ProductListNextJs} = require('../../Controller/Admin/ProductController');
+    ProductListNextJs,
+    ProductByPriceNext} = require('../../Controller/Admin/ProductController');
 const upload = require('../../multer');
 const { CheckDuplicateName } = require('../../MiddleWare/CheckProductName');
 const { CheckProductQty } = require('../../MiddleWare/CheckProductQty');
@@ -26,7 +27,8 @@ const { CheckProductQty } = require('../../MiddleWare/CheckProductQty');
 ProductRoutes.get('/product-list', ProductList);
 ProductRoutes.get('/product-listnextjs', ProductListNextJs);
 ProductRoutes.delete('/product-delete/:id' , ProductDelete);
-ProductRoutes.get('/product-listbyprice/:pricetwo/:category' , ProductByPrice);
+ProductRoutes.get('/product-listbyprice/:priceone/:pricetwo/:category' , ProductByPrice);
+ProductRoutes.get('/product-listbypricenext/:pricetwo/:category' , ProductByPriceNext);
 ProductRoutes.post('/product-create', upload.fields([{name: "images" , maxCount:  6},
     {name: "singleimage" , maxCount: 1}]), CheckDuplicateName , ProductCreate);
 ProductRoutes.post('/product-create2' , upload.array("images" , 6) , ProductCreate2);

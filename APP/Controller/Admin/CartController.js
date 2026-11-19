@@ -2,12 +2,36 @@ const connection = require('../../Config/db')
 
 let CreateCartList = (req  , res) => {
 
-    const sql = `insert into tblcart (ProductId , UserId ,Qty , ProductPrice , ProductShipCharges) values (?,?,?,?,?)`;
+    const sql = `insert into tblcart (ProductId , ProductName,
+    ProductImages2,
+    ProductColor,
+    ProductNewPrice,
+    ProductOldPrice,
+    ProductQty,
+    UserId,
+    InvoiceNumber,
+    ProductImages1) values (?,?,?,?,?,?,?,?,?,?)`;
 
-    const {ProductId , UserId, Qty , ProductPrice, ProductShipCharges} = req.body;
+    const {ProductId , ProductName,
+    ProductImages2,
+    ProductColor,
+    ProductNewPrice,
+    ProductOldPrice,
+    ProductQty,
+    UserId,
+    InvoiceNumber,
+    ProductImages1} = req.body;
     // const price = Qty + ProductPrice;
     console.log(req.body);
-    connection.query(sql , [ProductId , UserId , Qty , ProductPrice , ProductShipCharges] , (error , result) => {
+    connection.query(sql , [ProductId , ProductName,
+    ProductImages2,
+    ProductColor,
+    ProductNewPrice,
+    ProductOldPrice,
+    ProductQty,
+    UserId,
+    InvoiceNumber,
+    ProductImages1] , (error , result) => {
 
          console.log(error);
         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
@@ -16,7 +40,7 @@ let CreateCartList = (req  , res) => {
             res.status(200).json({success: true , msg: 'Item Added to Cart' , Data: result});
             const sql = `UPDATE products SET ProductsInStock = ProductsInStock - ? WHERE id = ?`;
             
-            connection.query(sql , [Qty , ProductId]) , (error , result) => {
+            connection.query(sql , [ProductQty , ProductId]) , (error , result) => {
 
 
             }
@@ -134,7 +158,7 @@ let GetTotalQty = (req , res) => {
 
     connection.query(sql , [productid , userid] , (error , result) => {
 
-         console.log(error);
+       
         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
         if (result) return res.status(200).json({success: true , msg: 'Data Get Succesfully' , Data: result}) 
     })
@@ -142,7 +166,35 @@ let GetTotalQty = (req , res) => {
 }
 
 
+let CartQty = (req , res) => {
+
+    const sql = `SELECT SUM(ProductQty) AS ProductQty, SUM(ProductNewPrice) AS ProductNewPrice
+     FROM tblcart WHERE UserId = ?`;
+
+    const id = req.params.id;
+    connection.query(sql , [id] , (error , result) => {
+
+          if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Data Get Succesfully' , Data: result}) 
+
+    })
+}
+
+let SingleItemQty = (req , res) => {
+
+    const sql = `SELECT SUM(ProductQty) AS ProductQty, SUM(ProductNewPrice) AS ProductNewPrice
+     FROM tblcart WHERE UserId = ? AND ProductId = ? GROUP BY ProductId`;
+
+    const id = req.params.id;
+    const productid = req.params.productid
+    connection.query(sql , [id , productid] , (error , result) => {
+
+          if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Data Get Succesfully' , Data: result}) 
+
+    })
+}
 
 
-
-module.exports = {CreateCartList , GetCartID , DeleteCart , GetCartItems , CartDelete , GetTotalQty , CreateCartListMinus}
+module.exports = {CreateCartList , GetCartID , DeleteCart 
+    ,CartQty, GetCartItems , CartDelete , GetTotalQty , CreateCartListMinus , SingleItemQty}

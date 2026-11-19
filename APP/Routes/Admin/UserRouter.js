@@ -1,5 +1,5 @@
 const express = require('express');
-const { GetUserData, DeleteUserData, CreateUser, postdata, ConfirmCode, ResendCode, CheckUserNamePassword, ResetCodeEmail, ConfirmCodeAgain, UpdatePassword, UserList, UpdateUser, UserImageUpdate } = require('../../Controller/Admin/UserController');
+const { GetUserData, DeleteUserData, CreateUser, postdata, ConfirmCode, ResendCode, CheckUserNamePassword, ResetCodeEmail, ConfirmCodeAgain, UpdatePassword, UserList, UpdateUser, UserImageUpdate, CheckUserNamePasswordNext } = require('../../Controller/Admin/UserController');
 const upload = require('../../multer');
 const { DuplicateUserName, CheckEmailAddress, CheckEmailAddress2 } = require('../../MiddleWare/CheckUserName');
 const { checkduplicate } = require('../../MiddleWare/CheckDup');
@@ -13,6 +13,7 @@ UserRoutes.post('/user-confirmation' , ConfirmCode);
 UserRoutes.post('/user-confirmationagain' , ConfirmCodeAgain);
 UserRoutes.put('/code-resend' , ResendCode);
 UserRoutes.post('/check-login' , CheckEmailAddress,CheckIsActive, CheckUserNamePassword);
+UserRoutes.post('/check-loginnext' , CheckEmailAddress ,CheckUserNamePasswordNext);
 UserRoutes.post('/sendreset-code' ,CheckEmailAddress, ResetCodeEmail);
 UserRoutes.put('/reset-password/:useremail' , UpdatePassword);
 UserRoutes.get('/list-users/:id' , UserList);

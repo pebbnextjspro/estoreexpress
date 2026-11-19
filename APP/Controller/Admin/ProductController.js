@@ -147,12 +147,28 @@ let ProductDelete = (req , res) => {
 
 let ProductByPrice = (req , res) => {
 
-    const sql = `${productlist} AND pr.ProductNewPrice BETWEEN 100 AND ? AND pr.ProductCategory = ?`
+    const sql = `${productlist} AND pr.ProductOldPrice BETWEEN ? AND ? AND pr.ProductCategory = ?`
 
+const priceone = req.params.priceone;
 const pricetwo = req.params.pricetwo;
 const category = req.params.category;
 
 connection.query(sql , [priceone , pricetwo , category] , (error , result) => {
+
+    if (error) return res.json({success: false ,  msg: "There is a Server Error" , Error: error});
+    if (result) return res.json({success: true , msg: "Data Deleted Successfuly" , Data: result})
+
+})
+}
+
+let ProductByPriceNext = (req , res) => {
+
+    const sql = `SELECT * FROM products WHERE ProductNewPrice BETWEEN 100 AND ? AND ProductCategory = ?`
+
+const pricetwo = req.params.pricetwo;
+const category = req.params.category;
+
+connection.query(sql , [pricetwo , category] , (error , result) => {
 
     if (error) return res.json({success: false ,  msg: "There is a Server Error" , Error: error});
     if (result) return res.json({success: true , msg: "Data Deleted Successfuly" , Data: result})
@@ -505,4 +521,4 @@ module.exports = {ProductList , ProductDelete , ProductByPrice , ProductCreate ,
    ProductCreate2 , GetImages , UploadImage , ListColorFilter , ProductListByColor , ListBrandFilter , 
   ProductListByCategory , ProdcutListByColorandPrice , ProductListByBrand,ListSubCategoryFilter,
 ProdcutListBySubCategory , ProdcutListBySubCategoryandPrice, ListRatingFilter , ProductListByRating, UpdateQty ,
- UpdateQtyMinus, GetListById, UpdateMainImage , GetColor, ProductListNextJs}
+ UpdateQtyMinus, GetListById, UpdateMainImage , GetColor, ProductListNextJs,ProductByPriceNext}

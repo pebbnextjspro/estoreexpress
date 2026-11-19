@@ -29,7 +29,7 @@ const UserList = (req , res) => {
 
 const GetUserData = (req , res) => {
 
-    const sql = `Select UserId, UserName, UserPassword, UserEmail, IsActive, UserImages From tblusers order by UserName`;
+    const sql = `Select * From tblusers order by UserName`;
     connection.query(sql , (error , result) => {
         console.log(error);
 
@@ -225,7 +225,6 @@ let ResendCode = async (req , res) => {
 
     connection.query(sql , [UserEmail] , async (error , result) => {
 
-     console.log(error);   
     if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
 
     const user = result[0];
@@ -254,6 +253,45 @@ let ResendCode = async (req , res) => {
     })
    }
 
+  let CheckUserNamePasswordNext = (req, res) => {
+
+    console.log("Request Body:", req.body);
+
+    const { identifier ,password  } = req.body;
+
+    console.log(identifier ,password);
+
+    const sql = `
+        SELECT * FROM tblusers
+        WHERE  UserEmail = ? AND UserPassword = ?
+    `;
+
+    connection.query(sql, [ identifier ,password], (error, result) => {
+
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                msg: "DB Error",
+                Error: error
+            });
+        }
+
+        if (result.length > 0) {
+            return res.status(200).json({
+                success: true,
+                msg: "Login Successful",
+                Data: result
+            });
+        }
+
+        return res.status(401).json({
+            success: false,
+            msg: "Invalid Email or Password"
+        });
+    });
+};
+
+
 let ResetCodeEmail = async (req , res) => {
 
    try {
@@ -274,7 +312,6 @@ let ResetCodeEmail = async (req , res) => {
 
     connection.query(sql , [randomnumber , UserEmail] , (error , result) => {
 
-         console.log(error);
         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
         if (result) return res.status(200).json({success: true , msg: 'Data Updated Succesfully' , Data: result})    
 
@@ -340,4 +377,5 @@ let UserImageUpdate = (req , res) => {
 }
 
 module.exports = {GetUserData , DeleteUserData, CreateUser , UpdateUser , ConfirmCode , ResendCode ,
-    ConfirmCodeAgain, CheckUserNamePassword , ResetCodeEmail , UpdatePassword , UserList , UserImageUpdate}
+    ConfirmCodeAgain, CheckUserNamePassword , ResetCodeEmail , UpdatePassword , UserList , UserImageUpdate
+    ,CheckUserNamePasswordNext}
