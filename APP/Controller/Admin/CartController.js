@@ -10,7 +10,8 @@ let CreateCartList = (req  , res) => {
     ProductQty,
     UserId,
     InvoiceNumber,
-    ProductImages1) values (?,?,?,?,?,?,?,?,?,?)`;
+    ProductImages1,
+    ProductShipCharges) values (?,?,?,?,?,?,?,?,?,?,?)`;
 
     const {ProductId , ProductName,
     ProductImages2,
@@ -20,7 +21,8 @@ let CreateCartList = (req  , res) => {
     ProductQty,
     UserId,
     InvoiceNumber,
-    ProductImages1} = req.body;
+    ProductImages1,
+    ProductShipCharges} = req.body;
     // const price = Qty + ProductPrice;
     console.log(req.body);
     connection.query(sql , [ProductId , ProductName,
@@ -31,7 +33,8 @@ let CreateCartList = (req  , res) => {
     ProductQty,
     UserId,
     InvoiceNumber,
-    ProductImages1] , (error , result) => {
+    ProductImages1,
+    ProductShipCharges] , (error , result) => {
 
          console.log(error);
         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
@@ -168,7 +171,9 @@ let GetTotalQty = (req , res) => {
 
 let CartQty = (req , res) => {
 
-    const sql = `SELECT SUM(ProductQty) AS ProductQty, SUM(ProductNewPrice) AS ProductNewPrice
+    const sql = `SELECT SUM(ProductQty) AS ProductQty, SUM(ProductShipCharges) AS ProductShipCharges
+    , SUM(ProductNewPrice) AS ProductNewPrice, SUM(ProductNewPrice) + SUM(ProductShipCharges) AS
+    GrandTotal
      FROM tblcart WHERE UserId = ?`;
 
     const id = req.params.id;
@@ -179,6 +184,8 @@ let CartQty = (req , res) => {
 
     })
 }
+
+
 
 let SingleItemQty = (req , res) => {
 
@@ -195,6 +202,36 @@ let SingleItemQty = (req , res) => {
     })
 }
 
+let CartTableItems = (req , res) => {
+    const sql = `select ProductId,ProductName,ProductImages2 AS ProductDescription, ProductColor,ProductNewPrice,ProductOldPrice,
+ProductImages1,ProductShipCharges,
+SUM(ProductQty) AS TotalQty , SUM(ProductNewPrice) AS TotalAmount FROM tblcart WHERE UserId = ?
+GROUP BY ProductId Order By ProductName `;
+    const id = req.params.id;
+    connection.query(sql , [id] ,(error , result) => {
+
+        
+          if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Data Get Succesfully' , Data: result}) 
+
+    })
+}
+
+let CartDeleteNext = (req , res) => {
+
+    const sql = `DELETE FROM tblcart WHERE ProductId = ? AND UserId = ?`;
+    const productid = req.params.productid;
+    const userid = req.params.userid;
+    connection.query(sql , [productid , userid] , (error , result) => {
+
+         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Data Deleted Succesfully' , Data: result}) 
+
+    })
+
+}
+
 
 module.exports = {CreateCartList , GetCartID , DeleteCart 
-    ,CartQty, GetCartItems , CartDelete , GetTotalQty , CreateCartListMinus , SingleItemQty}
+    ,CartQty, GetCartItems , CartDelete , GetTotalQty , CreateCartListMinus , SingleItemQty,CartTableItems,
+CartDeleteNext}
