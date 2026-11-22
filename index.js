@@ -2,34 +2,60 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connection = require('./APP/Config/db')
 const path = require('path')
+const cookieParser = require("cookie-parser");
+const crypto = require('crypto')
 
 // Load env variables
 dotenv.config();
+app.use(cookieParser()); // 👈 Ye line add ki hai
 
 // Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "http://192.168.1.109:3000", // production mein apni actual frontend URL dein
+    credentials: true, // cookies bhejne aur receive karne ke liye zaroori
+  }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.get('/test', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, 'Uploads', '1766746648414-774077389.jpg')
-  );
-});
+
+// app.get("/api/admin", (req, res) => {
+
+//     let visitorId = req.cookies.visitor_id;
+
+//     if (!visitorId) {
+
+//         const crypto = require("crypto");
+
+//         visitorId = crypto.randomUUID();
+
+//         res.cookie("visitor_id", visitorId, {
+//             httpOnly: true,
+//             secure: false, // Local HTTP development
+//             sameSite: "lax",
+//             maxAge: 365 * 24 * 60 * 60 * 1000,
+//             path: "/"
+//         });
+
+//         console.log("New Visitor:", visitorId);
+
+//     } else {
+
+//         console.log("Returning Visitor:", visitorId);
+
+//     }
+
+//     res.json({
+//         success: true,
+//         visitorId,
+//         message: "Visitor tracked successfully"
+//     });
+
+// });
 
 
-app.get('/getlist' , (req , res) => {
-
-     const sql = 'SELECT ROW_NUMBER() OVER (order by id) AS SrNo,id,CategoryName,CategoryImgUrl FROM categories';
-        connection.query(sql , (error , result) => {
-            if (error) return res.json({msg: "There is a Server Error" , Error: error});
-            if (result) return res.json({msg: "Data Get Succesfuly" , Data: result});
-        })
-})
 
 // Import routes
 const ProductRoutes = require('./APP/Routes/Admin/ProductRoutes');
@@ -42,6 +68,7 @@ const BannerRoutes = require('./APP/Routes/Admin/BannerRouter');
 const WishListRoutes = require('./APP/Routes/Admin/WishListRoutes');
 const CartListRoutes = require('./APP/Routes/Admin/CartListRoutes');
 const ReviewRouter = require('./APP/Routes/Admin/ReviewRouter');
+const CookieRoutes = require('./APP/Routes/Admin/CookiesRouter');
 
 // Use routes with prefix
 app.use('/api/admin/products', ProductRoutes);
@@ -54,6 +81,7 @@ app.use('/api/admin/banner' , BannerRoutes);
 app.use('/api/admin/wishlist' , WishListRoutes);
 app.use('/api/admin/cart' , CartListRoutes);
 app.use('/api/admin/review' , ReviewRouter);
+app.use('/api/admin/cookie' , CookieRoutes);
 
 // Start server
 app.listen(process.env.PORT || 5000, (error) => {
