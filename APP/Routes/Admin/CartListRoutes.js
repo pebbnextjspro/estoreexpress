@@ -1,9 +1,14 @@
 const express = require('express');
-const { CreateCartList, GetCartID, DeleteCart, GetCartItems, CartDelete, GetTotalQty, CreateCartListMinus, DeleteAll, CartQty, SingleItemQty, CartTableItems, CartDeleteNext } = require('../../Controller/Admin/CartController');
+const { CreateCartList, GetCartID, DeleteCart, GetCartItems, CartDelete, GetTotalQty, CreateCartListMinus, DeleteAll, 
+    CartQty, SingleItemQty, CartTableItems, CartDeleteNext, 
+    CreateCartListNextMinus,
+    CartDeleteAll} = require('../../Controller/Admin/CartController');
 const { CheckProductQty2, CheckProductQty3 } = require('../../MiddleWare/CheckProductQty');
+const { ProductUpdateQty } = require('../../MiddleWare/UpdateProductQty');
 const CartListRoutes = express.Router();
 
 CartListRoutes.post('/cart-create', CheckProductQty2 , CreateCartList);
+CartListRoutes.post('/cart-createminusnext' , CreateCartListNextMinus);
 CartListRoutes.post('/cart-createminus' , CreateCartListMinus);
 CartListRoutes.post('/cart-create2', CheckProductQty3 , CreateCartList);
 CartListRoutes.get('/cart-list/:id' , GetCartID);
@@ -14,7 +19,8 @@ CartListRoutes.get('/totalqty/:productid/:userid' , GetTotalQty);
 CartListRoutes.get('/cart-qty/:id' , CartQty);
 CartListRoutes.get('/singleitem-qty/:id/:productid' , SingleItemQty);
 CartListRoutes.get('/table-list/:id' , CartTableItems);
-CartListRoutes.post('/cart-deletenext/:productid/:userid' , CartDeleteNext);
+CartListRoutes.post('/cart-deletenext/:productid/:userid' ,ProductUpdateQty, CartDeleteNext);
+CartListRoutes.post('/cart-deleteall/:userid' ,CartDeleteAll);
 
 
 module.exports = CartListRoutes

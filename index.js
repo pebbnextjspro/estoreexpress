@@ -21,42 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-// app.get("/api/admin", (req, res) => {
-
-//     let visitorId = req.cookies.visitor_id;
-
-//     if (!visitorId) {
-
-//         const crypto = require("crypto");
-
-//         visitorId = crypto.randomUUID();
-
-//         res.cookie("visitor_id", visitorId, {
-//             httpOnly: true,
-//             secure: false, // Local HTTP development
-//             sameSite: "lax",
-//             maxAge: 365 * 24 * 60 * 60 * 1000,
-//             path: "/"
-//         });
-
-//         console.log("New Visitor:", visitorId);
-
-//     } else {
-
-//         console.log("Returning Visitor:", visitorId);
-
-//     }
-
-//     res.json({
-//         success: true,
-//         visitorId,
-//         message: "Visitor tracked successfully"
-//     });
-
-// });
-
-
-
 // Import routes
 const ProductRoutes = require('./APP/Routes/Admin/ProductRoutes');
 const CategoryRoutes = require('./APP/Routes/Admin/CategoryRoutes');
@@ -69,6 +33,7 @@ const WishListRoutes = require('./APP/Routes/Admin/WishListRoutes');
 const CartListRoutes = require('./APP/Routes/Admin/CartListRoutes');
 const ReviewRouter = require('./APP/Routes/Admin/ReviewRouter');
 const CookieRoutes = require('./APP/Routes/Admin/CookiesRouter');
+const InvoiceRoutes = require('./APP/Routes/Admin/InvoiceRouter');
 
 // Use routes with prefix
 app.use('/api/admin/products', ProductRoutes);
@@ -82,6 +47,7 @@ app.use('/api/admin/wishlist' , WishListRoutes);
 app.use('/api/admin/cart' , CartListRoutes);
 app.use('/api/admin/review' , ReviewRouter);
 app.use('/api/admin/cookie' , CookieRoutes);
+app.use('/api/admin/invoice' , InvoiceRoutes)
 
 // Start server
 app.listen(process.env.PORT || 5000, (error) => {
