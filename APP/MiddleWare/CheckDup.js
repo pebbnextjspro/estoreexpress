@@ -1,17 +1,20 @@
 const connection = require('../Config/db')
 
 
-let checkduplicate = (req , res , next) => {
 
-    const sql = `select * from tblusers where UserName = ?`
 
-    const UserName = req.body.UserName;
+let checkduplicateNext = (req , res , next) => {
 
-    connection.query(sql , [UserName] , (error, result) => {
+    const sql = `select * from tblusers where UserId = ?`
+
+    const id = req.params.id;
+    
+
+    connection.query(sql , [id] , (error, result) => {
         if (error) return res.status(500).json({success: false , msg: "DB Error" , Error: error});
         if (result.length > 0) {
 
-            return res.status(401).json({success: true , msg: "User Name Already Exist" , Data: result})
+            return res.status(401).json({success: true , msg: "User Already Exist" , Data: result})
         } else {
 
             next();
@@ -20,4 +23,4 @@ let checkduplicate = (req , res , next) => {
     
 }
 
-module.exports = {checkduplicate}
+module.exports = { checkduplicateNext}

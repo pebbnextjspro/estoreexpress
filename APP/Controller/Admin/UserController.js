@@ -376,6 +376,89 @@ let UserImageUpdate = (req , res) => {
     })
 }
 
+let UsercreateNext = (req , res) => {
+
+    const sql = `insert into tblusers (
+    UserName,
+    UserPassword,
+    UserEmail,
+    UserCountry,
+    UserFirstName,
+    UserLastName,
+    UserAddress,
+    UserCity,
+    UserPostalCode,
+    UserPhone,
+    userId) values (?,?,?,?,?,?,?,?,?,?,?)`;
+    const id = req.params.id;
+    const {
+    UserName,
+    UserPassword,
+    UserEmail,
+    UserCountry,
+    UserFirstName,
+    UserLastName,
+    UserAddress,
+    UserCity,
+    UserPostalCode,
+    UserPhone} = req.body;
+    
+    connection.query(sql , [
+    UserName,
+    UserPassword,
+    UserEmail,
+    UserCountry,
+    UserFirstName,
+    UserLastName,
+    UserAddress,
+    UserCity,
+    UserPostalCode,
+    UserPhone,id] , (error , result) => {
+
+         console.log(error);
+        if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'User Added Succesfully' , Data: result})  
+
+    })
+}
+
+let AddressUpdateNext = (req , res) => {
+
+    const sql = `update tblusers set 
+    UserName=?,UserPassword=?,UserEmail=?, UserCountry=?, UserFirstName=?,UserLastName=?, UserAddress=?, UserCity=?,
+    UserPostalCode=?, UserPhone=? where UserId = ?`;
+    const id = req.params.id;
+    const {
+    UserName,
+    UserPassword,
+    UserEmail,
+    UserCountry,
+    UserFirstName,
+    UserLastName,
+    UserAddress,
+    UserCity,
+    UserPostalCode,
+    UserPhone} = req.body;
+    
+    connection.query(sql , [
+    UserName,
+    UserPassword,
+    UserEmail,
+    UserCountry,
+    UserFirstName,
+    UserLastName,
+    UserAddress,
+    UserCity,
+    UserPostalCode,
+    UserPhone,id] , (error , result) => {
+
+         console.log(error);
+        if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Address Updated Succesfully' , Data: result})  
+
+    })
+}
+
 module.exports = {GetUserData , DeleteUserData, CreateUser , UpdateUser , ConfirmCode , ResendCode ,
     ConfirmCodeAgain, CheckUserNamePassword , ResetCodeEmail , UpdatePassword , UserList , UserImageUpdate
-    ,CheckUserNamePasswordNext}
+    ,CheckUserNamePasswordNext, UsercreateNext, AddressUpdateNext}

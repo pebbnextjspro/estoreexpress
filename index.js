@@ -13,7 +13,7 @@ app.use(cookieParser()); // 👈 Ye line add ki hai
 // Middlewares
 app.use(express.json());
 app.use(cors({
-    origin: "http://192.168.1.109:3000", // production mein apni actual frontend URL dein
+    origin: "http://192.168.70.97:3000", // production mein apni actual frontend URL dein
     credentials: true, // cookies bhejne aur receive karne ke liye zaroori
   }));
 app.use(express.urlencoded({ extended: true }));
