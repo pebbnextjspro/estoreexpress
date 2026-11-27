@@ -23,4 +23,17 @@ console.log(error)
 
 }
 
-module.exports = {CreateInvoice}
+let GetInvoiceTotal = (req , res) => {
+
+    const sql = `SELECT SUM(ProductShipCharges) AS TotalInvoiceAmount , InvoiceNumber FROM tblinvoice WHERE UserId = ?`;
+    const id = req.params.id;
+    connection.query(sql , [id] , (error , result) => {
+
+        console.log(error)
+         if (error) return res.status(500).json({success: false , msg: 'DB Error' , Error: error});
+        if (result) return res.status(200).json({success: true , msg: 'Data Get Succesfully' , Data: result}) 
+        
+    })
+}
+
+module.exports = {CreateInvoice , GetInvoiceTotal}
